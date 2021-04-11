@@ -41,7 +41,7 @@ const Dashboard = ({ historical }) => {
         <p>{`Topic: ${latestMoisture.topic} / Value: ${latestMoisture.value} / Last updated: ${latestMoisture.timestamp}`}</p>
       </div>
       <div>
-        <h3>Historical data</h3>
+        <h3>Historical data (last 30 seconds)</h3>
         <p>Saturation</p>
         <p>{JSON.stringify(saturation)}</p>
         <p>Moisture</p>

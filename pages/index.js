@@ -18,7 +18,7 @@ export const getServerSideProps = async (context) => {
   const history = await prisma.monitor.findMany({
     where: {
       timestamp: {
-        gte: dayjs().subtract(10, "seconds").toDate(),
+        gte: dayjs().subtract(30, "seconds").toDate(),
       },
     },
     orderBy: {
