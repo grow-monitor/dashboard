@@ -1,0 +1,90 @@
+/* Preflight will be injected here */
+@tailwind base;
+
+/* Write your own custom base styles here */
+@layer base {
+  html {
+    @apply bg-background;
+  }
+
+  p,
+  img,
+  pre,
+  ul,
+  ol,
+  h2,
+  h3,
+  figcaption,
+  blockquote {
+    @apply mb-4;
+  }
+
+  figcaption {
+    @apply text-xs italic text-center -mt-2;
+  }
+
+  figure {
+    @apply flex flex-col items-center justify-center;
+  }
+
+  ul,
+  ol {
+    @apply ml-4;
+  }
+
+  blockquote {
+    @apply pl-4 border-l-2 border-secondary;
+  }
+  a {
+    @apply text-accent;
+  }
+
+  pre {
+    @apply bg-secondary p-4 whitespace-pre-wrap;
+  }
+  li {
+    @apply mb-2;
+  }
+
+  ul {
+    @apply list-disc;
+  }
+
+  ol {
+    @apply list-decimal;
+  }
+
+  h2 {
+    @apply font-bold text-lg;
+  }
+
+  h3 {
+    @apply font-semibold text-base;
+  }
+}
+
+/* Start purging... */
+@tailwind components;
+/* Stop purging. */
+
+/* Write your own custom component styles here */
+@layer components {
+  .container {
+    @apply max-w-2xl px-4 mx-auto mt-12 mb-24;
+  }
+
+  .btn-blue {
+    @apply bg-blue-500 text-white font-bold py-2 px-4 rounded;
+  }
+}
+
+/* Start purging... */
+@tailwind utilities;
+/* Stop purging. */
+
+/* Write your own custom utilities here */
+@layer utilities {
+  .center-absolute-x {
+    transform: translate(-50%, 0);
+  }
+}

@@ -1,2 +1,1 @@
-# dashboard
-Web app that provides both real-time and historical view to collected sensor data
+This is a starter template for [Learn Next.js](https://nextjs.org/learn).
