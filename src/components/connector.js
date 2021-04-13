@@ -5,6 +5,7 @@ const brokerUrl = `wss://${process.env.NEXT_PUBLIC_MQTT_HOST}:${process.env.NEXT
 const options = {
   username: process.env.NEXT_PUBLIC_MQTT_USERNAME,
   password: process.env.NEXT_PUBLIC_MQTT_PASSWORD,
+  keepalive: 0,
 };
 
 const MqttConnector = ({ children }) => (
