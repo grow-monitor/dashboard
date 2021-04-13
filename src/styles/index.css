@@ -12,6 +12,7 @@
   pre,
   ul,
   ol,
+  h1,
   h2,
   h3,
   figcaption,
@@ -54,12 +55,16 @@
     @apply list-decimal;
   }
 
+  h1 {
+    @apply font-extrabold text-2xl;
+  }
+
   h2 {
-    @apply font-bold text-lg;
+    @apply font-bold text-xl;
   }
 
   h3 {
-    @apply font-semibold text-base;
+    @apply font-semibold text-lg;
   }
 }
 

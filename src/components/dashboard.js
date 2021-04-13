@@ -1,51 +1,86 @@
 import { useSubscription } from "mqtt-react-hooks";
 import { useEffect, useState } from "react";
+import Channel from "./channel";
 
-const getLastElement = (arr) => arr.slice(arr.length - 1)[0];
+const IDENTIFIERS = process.env.NEXT_PUBLIC_IDENTIFIERS.split(",");
+const SUBJECTS = process.env.NEXT_PUBLIC_SUBJECTS.split(",");
+
+const TOPICS = IDENTIFIERS.flatMap((identifier) =>
+  SUBJECTS.map((subject) => `${identifier}/${subject}`)
+);
+const INITIAL_STATE = Object.fromEntries(
+  IDENTIFIERS.map((identifier) => [identifier, []])
+);
+
+const getLastElementMap = (mapOfLists) => {
+  return Object.entries(mapOfLists)
+    .map(([key, val]) => {
+      return [key, ...val.slice(-1)];
+    })
+    .reduce((lastElementMap, [key, val]) => {
+      lastElementMap[key] = val;
+      return lastElementMap;
+    }, {});
+};
 
 const Dashboard = ({ historical }) => {
-  const [moisture, setMoisture] = useState(historical.moisture);
-  const [saturation, setSaturation] = useState(historical.saturation);
-  const [latestMoisture, setLatestMoisture] = useState(
-    getLastElement(moisture)
+  const [moistures, setMoistures] = useState(INITIAL_STATE);
+  const [saturations, setSaturations] = useState(INITIAL_STATE);
+  const [latestMoistures, setLatestMoistures] = useState(
+    getLastElementMap(moistures)
   );
-  const [latestSaturation, setLatestSaturation] = useState(
-    getLastElement(saturation)
+  const [latestSaturations, setLatestSaturations] = useState(
+    getLastElementMap(saturations)
   );
-  const { message, connectionStatus } = useSubscription([
-    "mock/moisture",
-    "mock/saturation",
-  ]);
+  const { message, connectionStatus } = useSubscription(TOPICS);
 
   useEffect(() => {
-    if (message?.topic) {
-      const topic = message.topic.split("/").pop();
-      switch (topic) {
-        case "moisture":
-          setLatestMoisture({ topic, ...message?.message });
-          setMoisture([...moisture.slice(1), latestMoisture]);
-          break;
-        case "saturation":
-          setLatestSaturation({ topic, ...message?.message });
-          setSaturation([...saturation.slice(1), latestSaturation]);
-      }
+    if (!message?.topic) {
+      return;
+    }
+    const parts = message.topic.split("/");
+    const [identifier, topic] = [
+      parts.slice(0, -1).join("/"),
+      ...parts.slice(-1),
+    ];
+
+    switch (topic) {
+      case "moisture":
+        const latestMoisture = { topic, ...message?.message };
+        setLatestMoistures({
+          ...latestMoistures,
+          [identifier]: latestMoisture,
+        });
+        const moisture = [...moistures[identifier].slice(1), latestMoisture];
+        setMoistures({ ...moistures, [identifier]: moisture });
+        break;
+      case "saturation":
+        const latestSaturation = { topic, ...message?.message };
+        setLatestSaturations({
+          ...latestSaturations,
+          [identifier]: latestSaturation,
+        });
+        const saturation = [
+          ...saturations[identifier].slice(1),
+          latestSaturations,
+        ];
+        setSaturations({ ...saturations, [identifier]: saturation });
     }
   }, [message]);
 
   return (
     <section>
       <div>
-        <h3>Live data</h3>
+        <h2>Live data</h2>
         <p>{`Status: ${connectionStatus}`}</p>
-        <p>{`Topic: ${latestSaturation.topic} / Value: ${latestSaturation.value} / Last updated: ${latestSaturation.timestamp}`}</p>
-        <p>{`Topic: ${latestMoisture.topic} / Value: ${latestMoisture.value} / Last updated: ${latestMoisture.timestamp}`}</p>
-      </div>
-      <div>
-        <h3>Historical data (last 30 seconds)</h3>
-        <p>Saturation</p>
-        <p>{JSON.stringify(saturation)}</p>
-        <p>Moisture</p>
-        <p>{JSON.stringify(moisture)}</p>
+        {IDENTIFIERS.map((id) => (
+          <Channel
+            key={id}
+            id={id}
+            moisture={latestMoistures[id]}
+            saturation={latestSaturations[id]}
+          />
+        ))}
       </div>
     </section>
   );
