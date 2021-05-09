@@ -8,20 +8,15 @@
     "start": "next start"
   },
   "dependencies": {
-    "@prisma/client": "^2.20.1",
-    "dayjs": "^1.10.4",
-    "mqtt-react-hooks": "^2.0.0",
+    "faunadb": "^4.2.0",
     "next": "^10.0.0",
     "react": "17.0.1",
-    "react-dom": "17.0.1",
-    "superjson": "^1.7.3"
+    "react-dom": "17.0.1"
   },
   "devDependencies": {
     "autoprefixer": "^10.2.5",
-    "babel-plugin-superjson-next": "^0.2.3",
     "eslint": "^7.24.0",
     "postcss": "^8.2.9",
-    "prisma": "^2.20.1",
     "stylelint-config-recommended": "^4.0.0",
     "tailwindcss": "^2.1.1"
   }
